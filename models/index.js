@@ -3,5 +3,6 @@
 //For now, the index.js file should look like the following code:
 
 const User = require('./User');
+const Post = require('./Post');
 
-module.exports = { User };
+module.exports = { User, Post };

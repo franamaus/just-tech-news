@@ -4,7 +4,13 @@ const bcrypt = require('bcrypt');
 
 // create our User model
 // Model is a sequelize object in which we can make use of functions
-class User extends Model {}
+class User extends Model {
+  // set up method to run on instance data (per user) to check password
+  // in order to compare at login
+  checkPassword(loginPw) {
+    return bcrypt.compareSync(loginPw, this.password);
+  }
+}
 
 // define table columns and configuration:
 // Once we create the User class, we use the .init() method to initialize the model's data and configuration, 

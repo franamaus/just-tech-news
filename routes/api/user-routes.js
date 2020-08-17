@@ -70,6 +70,8 @@ router.put('/:id', (req, res) => {
     // SET username = "Lernantino", email = "lernantino@gmail.com", password = "newPassword1234"
     // WHERE id = 1;
     User.update(req.body, {
+        // in order to implement hooks
+        individualHooks: true,
         where: {
             id: req.params.id
         }
@@ -80,6 +82,7 @@ router.put('/:id', (req, res) => {
             return;
         }
         res.json(dbUserData);
+        return dbUserData;
     })
     .catch(err => {
         console.log(err);

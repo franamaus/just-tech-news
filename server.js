@@ -18,6 +18,7 @@ app.use(routes);
 // If it doesn't find a table, it'll create it for you!
 // if force: false is set to true
 // it would drop and re-create all of the database tables on startup.
+// which performs similarly to SQL's DROP TABLE IF EXISTS
 sequelize.sync({ force: false }).then(() => {
   app.listen(PORT, () => console.log('Now listening'));
 });

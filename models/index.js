@@ -5,4 +5,14 @@
 const User = require('./User');
 const Post = require('./Post');
 
+// create associations; one-to-many relationship
+User.hasMany(Post, {
+    foreignKey: 'user_id'
+});
+
+// make the reverse association as well
+Post.belongsTo(User, {
+    foreignKey: 'user-id'
+});
+
 module.exports = { User, Post };

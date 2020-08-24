@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { User, Post, Vote, Comment } = require('../../models');
+const { builtinModules } = require('module');
 
 // GET /api/users
 router.get('/', (req, res) => {
@@ -75,7 +76,20 @@ router.post('/', (req, res) => {
         email: req.body.email,
         password: req.body.password
     })
-    .then(dbUserData => res.json(dbUserData))
+    // this gives our server easy access to the user's user_id, username, 
+    // and a Boolean describing whether or not the user is logged in.
+    .then(dbUserData => {
+      // We want to make sure the session is created before we send the response back, 
+      // so we're wrapping the variables in a callback. The req.session.save() method 
+      // will initiate the creation of the session and then run the callback function once complete.
+      req.session.save(() => {
+        req.session.user_id = dbUserData.id;
+        req.session.username = dbUserData.username;
+        req.session.loggedIn = true;
+    
+        res.json(dbUserData);
+      });
+    })
     .catch(err => {
         console.log(err);
         res.status(500).json(err);
@@ -83,25 +97,32 @@ router.post('/', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-    // expects {email: 'lernantino@gmail.com', password: 'password1234'}
-    User.findOne({
-        where: {
-          email: req.body.email
-        }
-    }).then(dbUserData => {
-        if (!dbUserData) {
-          res.status(400).json({ message: 'No user with that email address!' });
-          return;
-        }
+  User.findOne({
+    where: {
+      email: req.body.email
+    }
+  }).then(dbUserData => {
+    if (!dbUserData) {
+      res.status(400).json({ message: 'No user with that email address!' });
+      return;
+    }
 
-        // Verify user
-        const validPassword = dbUserData.checkPassword(req.body.password);
-        if (!validPassword) {
-            res.status(400).json({ message: 'Incorrect password!' });
-            return;
-        }
-        res.json({ user: dbUserData, message: 'You are now logged in!' });
-    });  
+    const validPassword = dbUserData.checkPassword(req.body.password);
+
+    if (!validPassword) {
+      res.status(400).json({ message: 'Incorrect password!' });
+      return;
+    }
+    console.log(req);
+    req.session.save(() => {
+      // declare session variables
+      req.session.user_id = dbUserData.id;
+      req.session.username = dbUserData.username;
+      req.session.loggedIn = true;
+
+      res.json({ user: dbUserData, message: 'You are now logged in!' });
+    });
+  });
 });
 
 // PUT /api/users/1

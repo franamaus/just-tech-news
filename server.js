@@ -22,6 +22,8 @@ const sess = {
   })
 };
 
+app.use(session(sess));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // express.static() method is a built-in Express.js middleware function 
@@ -31,7 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // turn on routes
 app.use(routes);
 // call session middleware by passing through sess object
-app.use(session(sess));
+
 
 
 app.engine('handlebars', hbs.engine);

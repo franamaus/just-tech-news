@@ -61,3 +61,6 @@ require('dotenv').config();
 
 
 dotenv is an npm package for use of the .env file (need to install this package)
+
+The express-session library allows us to connect to the back end. The connect-session-sequelize library automatically stores the sessions created by express-session into our database. Run:
+npm i express-session connect-session-sequelize

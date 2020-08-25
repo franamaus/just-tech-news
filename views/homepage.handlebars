@@ -3,19 +3,7 @@
     an object in each iteration-->
     {{#each posts as |post|}}
     <li>
-        <article class="post">
-        <div class="title">
-            {{!-- double curly brackets indicate placeholders for Handlebars.js --}}
-            <a href="{{post_url}}" target="_blank">{{title}}</a>
-            <span>({{post_url}})</span>
-        </div>
-        <div class="meta">
-            {{vote_count}} point(s) by {{user.username}} on
-            {{created_at}}
-            |
-            <a href="/post/{{id}}">{{comments.length}} comment(s)</a>
-        </div>
-        </article>
+       {{> post-info post}}
     </li>
     {{/each}}
 </ol>
